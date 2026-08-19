@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paiement · CÂLINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="caline-config.js"></script>
+<style>
+:root{
+  --cream:#fbf8f2;--beige:#f2eae0;--paper:#fffdf9;--ink:#3c342a;--taupe:#8b7f6d;
+  --gold:#c2a35e;--gold-deep:#a8863f;--gold-soft:#dcc9a0;--line:#e7dcc9;
+  --green:#2c7a4d;--red:#b0573f;
+  --serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);font-weight:300;-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.serif{font-family:var(--serif)}
+.hidden{display:none!important}
+
+/* ---------- TRUST BAR / HEADER ---------- */
+.trust{background:linear-gradient(90deg,#2c7a4d,#33885a 50%,#2c7a4d);color:#fff;text-align:center;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:7px 12px}
+.trust b{color:#ecd6a0;font-weight:500}
+.head{display:flex;align-items:center;justify-content:space-between;max-width:1120px;margin:0 auto;
+  padding:18px clamp(16px,4vw,28px);border-bottom:1px solid var(--line)}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:.16em;color:var(--gold-deep)}
+.secure{display:flex;align-items:center;gap:7px;font-size:12px;letter-spacing:.04em;color:var(--taupe)}
+.secure svg{width:15px;height:15px;stroke:var(--gold-deep);fill:none;stroke-width:1.6}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:clamp(18px,3vw,30px) clamp(16px,4vw,28px) 80px;
+  display:grid;grid-template-columns:1.25fr .95fr;gap:clamp(24px,4vw,52px);align-items:start}
+.col-form{min-width:0}
+.col-sum{min-width:0}
+
+/* mobile summary toggle */
+.msum{display:none;border:1px solid var(--line);background:var(--paper);border-radius:12px;
+  padding:14px 16px;margin-bottom:20px;cursor:pointer;align-items:center;justify-content:space-between}
+.msum .l{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--gold-deep)}
+.msum .l svg{width:16px;height:16px;stroke:var(--gold-deep);fill:none;stroke-width:1.6;transition:.3s}
+.msum.open .l svg{transform:rotate(180deg)}
+.msum .tot{font-family:var(--serif);font-size:20px;font-weight:600}
+
+/* ---------- FORM ---------- */
+.sec{margin-bottom:30px}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+.sec-h .n{width:24px;height:24px;flex:none;border-radius:50%;border:1px solid var(--gold);color:var(--gold-deep);
+  font-family:var(--serif);font-size:14px;display:flex;align-items:center;justify-content:center}
+.sec-h h2{font-family:var(--serif);font-size:23px;font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f{margin-bottom:14px}
+.f.full{grid-column:1 / -1}
+.f label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe);margin-bottom:6px}
+.f label .req{color:var(--gold-deep)}
+.f input,.f select,.f textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);font-family:var(--sans);font-size:15px;color:var(--ink);transition:.2s}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--gold);background:#fff}
+.f input.err,.f select.err{border-color:var(--red);background:#fdf6f4}
+.f .hint{font-size:12px;color:var(--red);margin-top:5px;min-height:14px;display:none}
+.f .hint.show{display:block}
+.f textarea{resize:vertical;min-height:74px}
+.check{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink);cursor:pointer;margin-top:4px}
+.check input{width:18px;height:18px;flex:none;margin-top:1px;accent-color:var(--gold-deep);cursor:pointer}
+.check a{color:var(--gold-deep);text-decoration:underline}
+
+/* ---------- ORDER SUMMARY ---------- */
+.summary{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px;position:sticky;top:20px}
+.summary h3{font-family:var(--serif);font-size:22px;font-weight:600;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.items{list-style:none;margin-bottom:6px}
+.it{display:flex;gap:13px;padding:12px 0;border-bottom:1px solid var(--line)}
+.it .thumb{width:62px;height:62px;flex:none;border-radius:9px;background:var(--beige) center/cover;position:relative}
+.it .thumb .q{position:absolute;top:-7px;right:-7px;background:var(--gold-deep);color:#fff;font-size:11px;
+  min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.it .info{flex:1;min-width:0}
+.it .nm{font-size:14px;color:var(--ink);line-height:1.3}
+.it .vr{font-size:12px;color:var(--taupe);margin-top:3px}
+.it .qrow{display:flex;align-items:center;gap:8px;margin-top:7px}
+.qbtn{width:24px;height:24px;border:1px solid var(--line);background:var(--cream);border-radius:6px;cursor:pointer;
+  font-size:15px;color:var(--ink);display:flex;align-items:center;justify-content:center;line-height:1}
+.qbtn:hover{border-color:var(--gold)}
+.qn{font-size:13px;min-width:18px;text-align:center}
+.it .rm{font-size:11px;color:var(--taupe);text-decoration:underline;cursor:pointer;margin-left:auto}
+.it .pr{font-family:var(--serif);font-size:16px;white-space:nowrap;align-self:flex-start}
+
+/* coupon */
+.coupon{display:flex;gap:8px;margin:18px 0}
+.coupon input{flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:var(--cream);font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.coupon input:focus{outline:none;border-color:var(--gold);background:#fff}
+.coupon button{padding:0 16px;border:1px solid var(--gold-soft);background:none;color:var(--gold-deep);border-radius:9px;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.2s}
+.coupon button:hover{background:var(--beige)}
+
+.totals{border-top:1px solid var(--line);padding-top:16px}
+.tr{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;color:var(--ink)}
+.tr .muted{color:var(--taupe)}
+.tr.free span:last-child{color:var(--green)}
+.tr.grand{font-family:var(--serif);font-size:23px;font-weight:600;border-top:1px solid var(--line);margin-top:8px;padding-top:14px}
+.tva{font-size:11px;color:var(--taupe);text-align:right;margin-top:-2px}
+
+/* pay zone */
+.payzone{margin-top:22px}
+.pay-method{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--paper)}
+.pm-head{display:flex;align-items:center;gap:11px;padding:15px 16px;border-bottom:1px solid var(--line);background:var(--cream)}
+.pm-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--gold-deep);position:relative;flex:none}
+.pm-radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--gold-deep)}
+.pm-label{font-size:14.5px;color:var(--ink);font-weight:400}
+.pm-cards{margin-left:auto;display:flex;gap:6px}
+.pm-cards span{font-size:10px;letter-spacing:.05em;color:var(--taupe);border:1px solid var(--line);border-radius:5px;padding:3px 7px;background:#fff;text-transform:uppercase}
+.pm-field{display:flex;align-items:center;gap:11px;padding:18px 16px;color:var(--taupe);font-size:13.5px}
+.pm-field .pm-lock{width:18px;height:18px;flex:none;stroke:var(--gold-deep);fill:none;stroke-width:1.6}
+.pm-alt{padding:0 16px 15px;font-size:12.5px;color:var(--taupe)}
+.pm-alt b{color:var(--ink);font-weight:500}
+.terms{margin-bottom:14px}
+.btn-pay{width:100%;padding:17px;border:none;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;font-family:var(--sans);
+  font-size:15px;letter-spacing:.08em;text-transform:uppercase;transition:.3s;font-weight:500}
+.btn-pay:hover:not(:disabled){filter:brightness(1.05);box-shadow:0 14px 32px rgba(168,134,63,.30)}
+.btn-pay:disabled{opacity:.45;cursor:not-allowed}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:4px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.paysec{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:13px;font-size:12px;color:var(--taupe)}
+.paysec svg{width:14px;height:14px;stroke:var(--gold-deep);fill:none;stroke-width:1.6}
+.cards{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:12px;flex-wrap:wrap}
+.cards span{font-size:10px;letter-spacing:.06em;color:var(--taupe);border:1px solid var(--line);
+  border-radius:5px;padding:4px 8px;background:var(--cream);text-transform:uppercase}
+.back{display:inline-block;margin-top:18px;font-size:13px;color:var(--taupe)}
+.back:hover{color:var(--gold-deep)}
+.legal-links{text-align:center;margin-top:14px;font-size:12px;color:var(--taupe)}
+.legal-links a{color:var(--taupe);text-decoration:underline;margin:0 6px}
+.legal-links a:hover{color:var(--gold-deep)}
+
+/* empty */
+.empty{max-width:480px;margin:60px auto;text-align:center;padding:0 20px}
+.empty .serif{font-size:30px;display:block;margin-bottom:10px}
+.empty p{color:var(--taupe);margin-bottom:26px}
+.empty a{display:inline-block;padding:14px 30px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));
+  color:#fff;border-radius:11px;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+  padding:13px 24px;border-radius:30px;font-size:14px;z-index:90;opacity:0;transition:.3s;pointer-events:none;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+
+@media(max-width:860px){
+  .wrap{grid-template-columns:1fr;gap:0;padding-bottom:60px}
+  .col-sum{order:-1}
+  .summary{position:static;border:none;background:none;padding:0;margin-bottom:8px}
+  .summary>h3{display:none}
+  .msum{display:flex}
+  .sumbody{display:none;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:18px;margin-bottom:24px}
+  .sumbody.open{display:block}
+  .grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:430px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- TRUST BAR -->
+<div class="trust">Paiement 100% sécurisé · Livraison offerte dès <b>49€</b> · Service client à votre écoute</div>
+
+<header class="head">
+  <a href="index.html" class="logo">CÂLINE</a>
+  <div class="secure">
+    <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+    Paiement sécurisé
+  </div>
+</header>
+
+<!-- EMPTY STATE -->
+<div id="empty" class="empty hidden">
+  <span class="serif">Votre panier est vide</span>
+  <p>Découvrez nos accessoires premium pour vos compagnons.</p>
+  <a href="index.html">Retour à la boutique</a>
+</div>
+
+<!-- CHECKOUT -->
+<div id="checkout" class="wrap hidden">
+
+  <!-- ============ LEFT : FORM ============ -->
+  <div class="col-form">
+
+    <!-- mobile summary toggle -->
+    <div class="msum" id="msumToggle">
+      <span class="l"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Récapitulatif</span>
+      <span class="tot" id="msumTotal">—</span>
+    </div>
+    <div class="sumbody" id="mSumBody"></div>
+
+    <!-- Contact -->
+    <div class="sec">
+      <div class="sec-h"><span class="n">1</span><h2>Contact</h2></div>
+      <div class="grid">
+        <div class="f full"><label>E-mail <span class="req">*</span></label>
+          <input id="email" type="email" autocomplete="email" placeholder="vous@email.com"><div class="hint" id="h-email">Veuillez saisir un e-mail valide.</div></div>
+        <div class="f full"><label>Téléphone <span class="req">*</span></label>
+          <input id="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78"><div class="hint" id="h-phone">Veuillez saisir un numéro valide.</div></div>
+      </div>
+    </div>
+
+    <!-- Livraison -->
+    <div class="sec">
+      <div class="sec-h"><span class="n">2</span><h2>Adresse de livraison</h2></div>
+      <div class="grid">
+        <div class="f"><label>Prénom <span class="req">*</span></label><input id="firstname" autocomplete="given-name"><div class="hint" id="h-firstname">Requis.</div></div>
+        <div class="f"><label>Nom <span class="req">*</span></label><input id="lastname" autocomplete="family-name"><div class="hint" id="h-lastname">Requis.</div></div>
+        <div class="f full"><label>Adresse <span class="req">*</span></label><input id="address" autocomplete="address-line1" placeholder="N° et nom de rue"><div class="hint" id="h-address">Requis.</div></div>
+        <div class="f full"><label>Complément d’adresse</label><input id="address2" autocomplete="address-line2" placeholder="Appartement, étage, bâtiment (optionnel)"></div>
+        <div class="f"><label>Code postal <span class="req">*</span></label><input id="postal" inputmode="numeric" autocomplete="postal-code" placeholder="13006"><div class="hint" id="h-postal">Code postal invalide.</div></div>
+        <div class="f"><label>Ville <span class="req">*</span></label><input id="city" autocomplete="address-level2"><div class="hint" id="h-city">Requis.</div></div>
+        <div class="f full"><label>Pays <span class="req">*</span></label>
+          <select id="country" autocomplete="country">
+            <option value="France">France</option>
+            <option value="Allemagne">Allemagne</option>
+            <option value="Autriche">Autriche</option>
+            <option value="Belgique">Belgique</option>
+            <option value="Bulgarie">Bulgarie</option>
+            <option value="Chypre">Chypre</option>
+            <option value="Croatie">Croatie</option>
+            <option value="Danemark">Danemark</option>
+            <option value="Espagne">Espagne</option>
+            <option value="Estonie">Estonie</option>
+            <option value="Finlande">Finlande</option>
+            <option value="Grèce">Grèce</option>
+            <option value="Hongrie">Hongrie</option>
+            <option value="Irlande">Irlande</option>
+            <option value="Italie">Italie</option>
+            <option value="Lettonie">Lettonie</option>
+            <option value="Lituanie">Lituanie</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Malte">Malte</option>
+            <option value="Pays-Bas">Pays-Bas</option>
+            <option value="Pologne">Pologne</option>
+            <option value="Portugal">Portugal</option>
+            <option value="République tchèque">République tchèque</option>
+            <option value="Roumanie">Roumanie</option>
+            <option value="Slovaquie">Slovaquie</option>
+            <option value="Slovénie">Slovénie</option>
+            <option value="Suède">Suède</option>
+          </select></div>
+        <div class="f full"><label>Notes de commande</label><textarea id="notes" placeholder="Instructions de livraison (optionnel)"></textarea></div>
+      </div>
+      <label class="check"><input type="checkbox" id="billsame" checked> L’adresse de facturation est identique à l’adresse de livraison.</label>
+      <label class="check" style="margin-top:12px"><input type="checkbox" id="newsletter"> Je souhaite recevoir les offres et nouveautés CÂLINE.</label>
+    </div>
+
+    <!-- Paiement -->
+    <div class="sec">
+      <div class="sec-h"><span class="n">3</span><h2>Paiement</h2></div>
+      <div class="pay-method">
+        <div class="pm-head">
+          <span class="pm-radio"></span>
+          <span class="pm-label">Carte bancaire</span>
+          <span class="pm-cards"><span>Visa</span><span>Mastercard</span><span>CB</span></span>
+        </div>
+        <!-- 🔌 POINT DE MONTAGE STRIPE : le Payment Element s'affichera ici -->
+        <div id="payment-element" class="pm-field">
+          <svg viewBox="0 0 24 24" class="pm-lock"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Vos informations de carte sont saisies de façon sécurisée et chiffrée.</span>
+        </div>
+        <div class="pm-alt">Paiement express disponible : <b>Apple&nbsp;Pay</b> · <b>Google&nbsp;Pay</b></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ RIGHT : SUMMARY ============ -->
+  <div class="col-sum">
+    <div class="summary">
+      <h3>Votre commande</h3>
+      <ul class="items" id="items"></ul>
+
+      <div class="coupon">
+        <input id="coupon" placeholder="Code promo">
+        <button id="couponBtn" type="button">Appliquer</button>
+      </div>
+
+      <div class="totals">
+        <div class="tr"><span class="muted">Sous-total</span><span id="subtotal">—</span></div>
+        <div class="tr" id="shipRow"><span class="muted">Livraison</span><span id="shipping">—</span></div>
+        <div class="tr grand"><span>Total</span><span id="grand">—</span></div>
+        <div class="tva">TVA incluse</div>
+      </div>
+
+      <div class="payzone">
+        <label class="check terms"><input type="checkbox" id="terms"> J’ai lu et j’accepte les <a href="cgv.html" target="_blank">conditions générales de vente</a> et la <a href="privacy.html" target="_blank">politique de confidentialité</a>.</label>
+        <button class="btn-pay" id="payBtn" disabled>Payer —</button>
+        <div class="paysec"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Paiement chiffré et sécurisé</div>
+        <div class="legal-links"><a href="cgv.html" target="_blank">CGV</a>·<a href="privacy.html" target="_blank">Confidentialité</a>·<a href="returns.html" target="_blank">Retours &amp; remboursements</a></div>
+        <div class="legal-links" style="margin-top:6px">Retours &amp; remboursement sous <b>14 jours</b> · Une question&nbsp;? <a href="mailto:contact@calineanimal.com">contact@calineanimal.com</a></div>
+        <div style="text-align:center"><a href="index.html" class="back">← Continuer mes achats</a></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+var FREE_SHIP=49, FLAT_SHIP=4.90;
+var cfg=window.CALINE_SUPABASE||{};
+var sb=(cfg.url&&cfg.anonKey&&window.supabase)?window.supabase.createClient(cfg.url,cfg.anonKey):null;
+var $=function(id){return document.getElementById(id);};
+var eur=function(n){return (Number(n)||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var _tt;function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove('show');},2800);}
+
+var CART=[];try{var sv=localStorage.getItem('caline_cart');if(sv)CART=JSON.parse(sv);}catch(e){}
+var PROD={};   // legacy_id -> {name,price,image}
+
+function saveCart(){try{localStorage.setItem('caline_cart',JSON.stringify(CART));}catch(e){}}
+
+function imgOf(p){var a=p&&p.images;return (a&&a.length)?a[0]:'';}
+
+async function loadProducts(){
+  var ids=CART.map(function(c){return c.id;});
+  if(!ids.length){return;}
+  if(sb){
+    try{
+      var r=await sb.from('products').select('legacy_id,name,price,images').in('legacy_id',ids);
+      if(!r.error&&r.data){r.data.forEach(function(p){PROD[p.legacy_id]={name:p.name,price:Number(p.price),image:imgOf(p)};});}
+    }catch(e){}
+  }
+}
+
+function lineItems(){
+  return CART.map(function(c){
+    var p=PROD[c.id]||{};
+    return {id:c.id,q:c.q,col:c.col,size:c.size,name:p.name||('Article réf. '+c.id),price:(p.price!=null?p.price:0),image:p.image||''};
+  });
+}
+
+function render(){
+  if(!CART.length){ $('checkout').classList.add('hidden'); $('empty').classList.remove('hidden'); return; }
+  $('empty').classList.add('hidden'); $('checkout').classList.remove('hidden');
+  var items=lineItems();
+  var subtotal=items.reduce(function(s,i){return s+i.price*i.q;},0);
+  var shipping=subtotal>=FREE_SHIP?0:FLAT_SHIP;
+  var grand=subtotal+shipping;
+
+  var html=items.map(function(i,idx){
+    var vr=[i.col,i.size].filter(Boolean).join(' · ');
+    var bg=i.image?('background-image:url(\''+esc(i.image)+'\')'):'';
+    return '<li class="it"><div class="thumb" style="'+bg+'"><span class="q">'+i.q+'</span></div>'+
+      '<div class="info"><div class="nm">'+esc(i.name)+'</div>'+(vr?'<div class="vr">'+esc(vr)+'</div>':'')+
+      '<div class="qrow"><button class="qbtn" onclick="chgQty('+idx+',-1)">−</button><span class="qn">'+i.q+'</span>'+
+      '<button class="qbtn" onclick="chgQty('+idx+',1)">+</button><span class="rm" onclick="rm('+idx+')">Retirer</span></div></div>'+
+      '<div class="pr">'+eur(i.price*i.q)+'</div></li>';
+  }).join('');
+  $('items').innerHTML=html;
+
+  $('subtotal').textContent=eur(subtotal);
+  $('shipping').textContent=shipping?eur(shipping):'Offerte';
+  $('shipRow').classList.toggle('free',shipping===0);
+  $('grand').textContent=eur(grand);
+  $('msumTotal').textContent=eur(grand);
+  $('payBtn').textContent='Payer '+eur(grand);
+  // mobile summary mirror
+  $('mSumBody').innerHTML='<ul class="items">'+html+'</ul>';
+  syncPayState();
+}
+
+function chgQty(idx,d){
+  CART[idx].q=Math.max(1,(CART[idx].q||1)+d);
+  saveCart();render();
+}
+function rm(idx){
+  CART.splice(idx,1);saveCart();
+  if(!CART.length){render();return;}
+  render();
+}
+
+/* ---- validation (UX only) ---- */
+function vEmail(){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('email').value.trim());}
+function vPhone(){return $('phone').value.replace(/[^0-9+]/g,'').length>=8;}
+function vPostal(){var c=$('country').value;var v=$('postal').value.trim();
+  if(c==='France')return /^\d{5}$/.test(v); return v.length>=3;}
+function vReq(id){return $(id).value.trim().length>0;}
+
+function mark(id,ok){ $(id).classList.toggle('err',!ok); var h=$('h-'+id); if(h)h.classList.toggle('show',!ok); }
+function formValid(silent){
+  var checks=[['email',vEmail()],['phone',vPhone()],['firstname',vReq('firstname')],
+    ['lastname',vReq('lastname')],['address',vReq('address')],['postal',vPostal()],['city',vReq('city')]];
+  var ok=true;
+  checks.forEach(function(c){ if(!silent)mark(c[0],c[1]); if(!c[1])ok=false; });
+  return ok;
+}
+function syncPayState(){
+  $('payBtn').disabled=!( $('terms').checked && CART.length>0 );
+}
+
+/* ---- persistance du formulaire (localStorage) ---- */
+var FORM_FIELDS=['email','phone','firstname','lastname','address','address2','postal','city','country','notes'];
+var FORM_CHECKS=['billsame','newsletter'];
+function saveForm(){
+  try{
+    var d={};
+    FORM_FIELDS.forEach(function(id){d[id]=$(id).value;});
+    FORM_CHECKS.forEach(function(id){d[id]=$(id).checked;});
+    localStorage.setItem('caline_checkout',JSON.stringify(d));
+  }catch(e){}
+}
+function restoreForm(){
+  try{
+    var d=JSON.parse(localStorage.getItem('caline_checkout')||'{}');
+    FORM_FIELDS.forEach(function(id){ if(d[id]!=null)$(id).value=d[id]; });
+    FORM_CHECKS.forEach(function(id){ if(d[id]!=null)$(id).checked=!!d[id]; });
+  }catch(e){}
+}
+
+/* ---- construction de la commande (prête pour Stripe/Supabase) ---- */
+function buildOrder(){
+  var items=lineItems();
+  var subtotal=items.reduce(function(s,i){return s+i.price*i.q;},0);
+  var shipping=subtotal>=FREE_SHIP?0:FLAT_SHIP;
+  return {
+    customer:{
+      email:$('email').value.trim(), phone:$('phone').value.trim(),
+      firstname:$('firstname').value.trim(), lastname:$('lastname').value.trim(),
+      address:$('address').value.trim(), address2:$('address2').value.trim(),
+      postal:$('postal').value.trim(), city:$('city').value.trim(),
+      country:$('country').value, notes:$('notes').value.trim(),
+      billing_same:$('billsame').checked, newsletter:$('newsletter').checked
+    },
+    items:items.map(function(i){return {id:i.id,name:i.name,price:i.price,qty:i.q,color:i.col,size:i.size};}),
+    coupon:$('coupon').value.trim()||null,
+    totals:{subtotal:subtotal, shipping:shipping, total:subtotal+shipping, currency:'EUR'}
+  };
+}
+
+/* ---- événements ---- */
+$('terms').addEventListener('change',syncPayState);
+['email','phone','firstname','lastname','address','postal','city'].forEach(function(id){
+  $(id).addEventListener('blur',function(){ formValid(false); });
+  $(id).addEventListener('input',function(){ $(id).classList.remove('err'); var h=$('h-'+id); if(h)h.classList.remove('show'); });
+});
+$('country').addEventListener('change',function(){ if($('postal').value)mark('postal',vPostal()); });
+
+// sauvegarde automatique à chaque modification
+FORM_FIELDS.concat(FORM_CHECKS).forEach(function(id){
+  var el=$(id); el.addEventListener('input',saveForm); el.addEventListener('change',saveForm);
+});
+
+$('couponBtn').addEventListener('click',function(){
+  var code=$('coupon').value.trim();
+  if(!code){toast('Saisissez un code promo.');return;}
+  toast('Code promo non reconnu.');   // hook : validation côté serveur (table coupons) à brancher ultérieurement
+});
+
+/* ===========================================================
+   🔌 POINT D'INTÉGRATION STRIPE
+   Pour activer le paiement, remplacez UNIQUEMENT le contenu de
+   startPayment() par l'appel à votre fonction serveur Stripe
+   (création de la Checkout Session puis redirection).
+   L'objet `order` contient déjà tout le nécessaire.
+   Aucune autre partie de la page n'a besoin d'être modifiée.
+   =========================================================== */
+function setPayLoading(on){
+  var b=$('payBtn');
+  if(on){ b.dataset.label=b.textContent; b.disabled=true; b.innerHTML='<span class="spin"></span> Traitement…'; }
+  else { b.disabled=false; b.textContent=b.dataset.label||b.textContent; syncPayState(); }
+}
+async function startPayment(order){
+  setPayLoading(true);
+  saveForm();
+  try{
+    var res=await fetch('/.netlify/functions/create-checkout-session',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({items:CART, customer:order.customer})
+    });
+    if(res.status===404){throw new Error('Fonction de paiement introuvable (404). Le déploiement Netlify des Functions est manquant.');}
+    var ct=res.headers.get('content-type')||'';
+    if(ct.indexOf('application/json')<0){throw new Error('Réponse inattendue du serveur (Function non déployée ?).');}
+    var data=await res.json();
+    if(!res.ok||data.error){
+      var dbg=[];
+      if(data.supabase_status)dbg.push('HTTP '+data.supabase_status);
+      if(data.supabase_detail)dbg.push(data.supabase_detail);
+      if(data.ids_recherches)dbg.push('ids: '+data.ids_recherches.join(','));
+      if(data.exception)dbg.push(data.exception);
+      throw new Error((data.error||'Erreur de paiement')+(dbg.length?' \u2014 '+dbg.join(' | '):''));
+    }
+    var pk=(window.CALINE_STRIPE&&window.CALINE_STRIPE.publishableKey)||'';
+    if(window.Stripe&&pk&&data.id){
+      var stripe=window.Stripe(pk);
+      var r=await stripe.redirectToCheckout({sessionId:data.id});
+      if(r&&r.error){throw new Error(r.error.message);}
+    } else if(data.url){
+      window.location.href=data.url;            // repli : redirection directe
+    } else {
+      throw new Error('Paiement indisponible');
+    }
+  }catch(e){
+    setPayLoading(false);
+    toast(e && e.message ? e.message : 'Le paiement n’a pas pu démarrer.');
+  }
+}
+function handlePay(){
+  if(!CART.length){toast('Votre panier est vide.');return;}
+  if(!formValid(false)){
+    toast('Veuillez compléter les champs requis.');
+    var first=document.querySelector('.err'); if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  startPayment(buildOrder());
+}
+$('payBtn').addEventListener('click',handlePay);
+
+$('msumToggle').addEventListener('click',function(){
+  this.classList.toggle('open'); $('mSumBody').classList.toggle('open');
+});
+
+/* ---- init ---- */
+(async function(){
+  restoreForm();
+  await loadProducts();
+  render();
+})();
+</script>
+</body>
+</html>

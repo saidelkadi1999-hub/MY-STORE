@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nos conseils pour chiens & chats — CÂLINE</title>
+<meta name="description" content="Découvrez nos conseils, guides et astuces pour prendre soin de vos compagnons au quotidien. Le blog CÂLINE pour chiens et chats.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Le Journal CÂLINE">
+<meta property="og:description" content="Conseils, guides et inspirations pour offrir le meilleur à vos compagnons.">
+<meta property="og:site_name" content="CÂLINE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif;--ivory:#FAF7F2;--cream:#fbf8f2;--beige:#f2eae0;--gold:#C8A45A;--gold-deep:#A67C2E;--ink:#2b2620;--taupe:#7e6a50;--line:rgba(200,164,90,.2)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--ivory);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.top{position:sticky;top:0;z-index:40;background:rgba(250,247,242,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.top-brand{font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.24em;color:var(--ink);padding-left:.24em}
+.top-back{font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep)}
+.hero-j{text-align:center;padding:clamp(56px,8vw,100px) 24px clamp(30px,4vw,48px);max-width:760px;margin:0 auto}
+.hero-j .eb{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);display:block;margin-bottom:14px}
+.hero-j h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,5vw,58px);line-height:1.08;margin-bottom:16px}
+.hero-j p{font-family:var(--sans);font-weight:300;font-size:clamp(15px,1.7vw,18px);color:var(--taupe);line-height:1.7;max-width:540px;margin:0 auto}
+.controls{max-width:1180px;margin:0 auto clamp(30px,4vw,48px);padding:0 24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.search{position:relative;flex:1;min-width:220px;max-width:340px}
+.search input{width:100%;padding:13px 18px 13px 44px;border:1px solid var(--line);border-radius:999px;background:#fff;font-family:var(--sans);font-size:14px;color:var(--ink);outline:none;transition:border-color .3s}
+.search input:focus{border-color:var(--gold)}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--taupe);fill:none;stroke-width:1.6}
+.cats{display:flex;flex-wrap:wrap;gap:9px}
+.cat{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.06em;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--taupe);cursor:pointer;transition:all .3s}
+.cat.active,.cat:hover{background:linear-gradient(135deg,#c8a45a,#a67c2e);color:#fff;border-color:transparent}
+.grid{max-width:900px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;gap:clamp(16px,2vw,22px)}
+.card{display:grid;grid-template-columns:240px 1fr;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 12px 32px -20px rgba(120,90,40,.3);border:1px solid rgba(200,164,90,.16);transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s}
+.card:hover{transform:translateY(-4px);box-shadow:0 22px 48px -22px rgba(120,90,40,.42)}
+.c-img{position:relative;overflow:hidden;background:var(--beige)}
+.c-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,1,.36,1)}
+.card:hover .c-img img{transform:scale(1.05)}
+.c-badge{position:absolute;top:12px;left:12px;background:rgba(255,253,248,.94);color:var(--gold-deep);font-weight:600;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+.c-body{padding:clamp(18px,2vw,26px);display:flex;flex-direction:column;justify-content:center;min-width:0}
+.c-cat{font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:9px}
+.c-cat i{opacity:.5;font-style:normal;margin:0 4px}
+.c-title{font-family:var(--serif);font-weight:600;font-size:clamp(18px,1.7vw,22px);line-height:1.25;margin-bottom:9px}
+.c-ex{font-weight:300;font-size:14px;color:var(--taupe);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.c-link{font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);display:inline-flex;gap:7px;align-items:center}
+.c-link em{font-style:normal;transition:transform .3s}
+.card:hover .c-link em{transform:translateX(4px)}
+.empty{max-width:1180px;margin:0 auto;padding:60px 24px;text-align:center;color:var(--taupe);font-weight:300}
+.pager{max-width:900px;margin:clamp(36px,4.5vw,56px) auto 0;padding:0 24px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.load-more{font-family:var(--sans);font-weight:600;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#c8a45a,#a67c2e);border:none;border-radius:999px;padding:15px 42px;cursor:pointer;transition:transform .3s,box-shadow .3s;box-shadow:0 10px 26px -12px rgba(166,124,46,.6)}
+.load-more:hover{transform:translateY(-2px);box-shadow:0 16px 34px -12px rgba(166,124,46,.72)}
+.load-count{font-size:12px;color:var(--taupe);letter-spacing:.05em}
+.foot{text-align:center;padding:48px 24px;color:var(--taupe);font-size:12px;letter-spacing:.1em;border-top:1px solid var(--line);margin-top:40px}
+@media(max-width:760px){.card{grid-template-columns:190px 1fr}}
+@media(max-width:600px){.card{grid-template-columns:1fr}.c-img{aspect-ratio:16/10}.controls{flex-direction:column;align-items:stretch}.search{max-width:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in"><a class="top-brand" href="index.html">CÂLINE</a><a class="top-back" href="index.html">&larr; Boutique</a></div></header>
+
+<section class="hero-j">
+  <span class="eb">Le Journal</span>
+  <h1>Nos conseils pour chiens &amp; chats</h1>
+  <p>Découvrez nos conseils, guides et astuces pour prendre soin de vos compagnons au quotidien.</p>
+</section>
+
+<div class="controls">
+  <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="Rechercher un article…" aria-label="Rechercher"></div>
+  <div class="cats" id="cats"></div>
+</div>
+
+<main class="grid" id="grid"></main>
+<div class="empty" id="empty" style="display:none">Aucun article ne correspond à votre recherche.</div>
+<nav class="pager" id="pager" aria-label="Pagination"></nav>
+
+<footer class="foot">© CÂLINE — Le Journal · Maison française</footer>
+
+<script src="blog-data.js"></script>
+<script>
+var PER=12, shown=PER, cat='Tous', q='';
+var B=window.CALINE_BLOG;
+var CATS=['Tous','Chats','Chiens','Bien-\u00eatre','Conseils','Guides','Accessoires'];
+function matchCat(a,c){
+  if(c==='Tous')return true;
+  var t=(a.slug+' '+a.title+' '+a.excerpt+' '+a.category).toLowerCase();
+  if(c==='Chats')return /chat|f\u00e9lin/.test(t);
+  if(c==='Chiens')return /chien|canin/.test(t);
+  if(c==='Bien-\u00eatre')return /bien-.tre|bien-etre|rituel|hydratation|confort|d\u00e9tente|s\u00e9r\u00e9nit|bien\u00eatre/.test(t)||a.category==='Conseils';
+  if(c==='Accessoires')return /accessoire|collier|harnais|sac|gamelle|couchage|fontaine|distributeur|laisse|panier|jouet/.test(t);
+  return a.category===c;
+}
+function bydate(list){ return list.slice().sort(function(x,y){ return String(y.date||'').localeCompare(String(x.date||'')); }); }
+function filtered(){
+  return bydate(B.all()).filter(function(a){
+    var okC=matchCat(a,cat);
+    var okQ=!q || (a.title+' '+a.excerpt+' '+a.category+' '+a.slug).toLowerCase().indexOf(q.toLowerCase())>=0;
+    return okC && okQ;
+  });
+}
+function renderCats(){
+  var el=document.getElementById('cats');
+  el.innerHTML=CATS.map(function(c){ return '<button class="cat'+(cat===c?' active':'')+'" data-c="'+c+'">'+c+'</button>'; }).join('');
+  el.querySelectorAll('.cat').forEach(function(b){ b.onclick=function(){ cat=b.getAttribute('data-c'); shown=PER; render(); }; });
+}
+function render(){
+  renderCats();
+  var list=filtered();
+  var slice=list.slice(0, shown);
+  var g=document.getElementById('grid'), e=document.getElementById('empty');
+  if(!slice.length){ g.innerHTML=''; e.style.display='block'; } else { e.style.display='none'; }
+  g.innerHTML=slice.map(function(a){
+    return '<a class="card" href="article.html?slug='+encodeURIComponent(a.slug)+'">'
+      +'<div class="c-img"><img src="'+a.image+'" alt="'+String(a.title).replace(/"/g,'&quot;')+'" loading="lazy"><span class="c-badge">'+a.category+'</span></div>'
+      +'<div class="c-body">'
+        +'<div class="c-cat">'+a.category+' <i>&middot;</i> '+B.fmtDate(a.date)+' <i>&middot;</i> '+a.readMin+' min</div>'
+        +'<h2 class="c-title">'+a.title+'</h2>'
+        +'<p class="c-ex">'+a.excerpt+'</p>'
+        +'<span class="c-link">Lire l\'article <em>&rarr;</em></span>'
+      +'</div></a>';
+  }).join('');
+  var p=document.getElementById('pager'); p.innerHTML='';
+  if(list.length>shown){
+    p.innerHTML='<button class="load-more" id="loadMore">Afficher plus d\'articles</button>'
+      +'<div class="load-count">'+slice.length+' sur '+list.length+' articles</div>';
+    document.getElementById('loadMore').onclick=function(){ shown+=PER; render(); };
+  } else if(list.length>PER){
+    p.innerHTML='<div class="load-count">'+list.length+' articles</div>';
+  }
+}
+document.getElementById('q').addEventListener('input', function(e){ q=e.target.value; shown=PER; render(); });
+render();
+</script>
+</body>
+</html>

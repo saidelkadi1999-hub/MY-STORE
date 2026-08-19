@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retours &amp; Remboursements · CÂLINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fbf8f2;--paper:#fffdf9;--ink:#3c342a;--taupe:#8b7f6d;--gold:#c2a35e;--gold-deep:#a8863f;--line:#e7dcc9;--serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:var(--gold-deep)}
+.head{border-bottom:1px solid var(--line);background:var(--paper)}
+.head .in{max-width:780px;margin:0 auto;padding:20px clamp(18px,4vw,28px);display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:.16em;color:var(--gold-deep);text-decoration:none}
+.back{font-size:13px;color:var(--taupe);text-decoration:none}
+.back:hover{color:var(--gold-deep)}
+.wrap{max-width:780px;margin:0 auto;padding:clamp(30px,5vw,54px) clamp(18px,4vw,28px) 90px}
+h1{font-family:var(--serif);font-size:clamp(30px,5vw,40px);font-weight:600;margin-bottom:6px}
+.upd{font-size:12.5px;color:var(--taupe);letter-spacing:.04em;margin-bottom:34px}
+h2{font-family:var(--serif);font-size:22px;font-weight:600;margin:30px 0 10px;color:var(--ink)}
+p{margin-bottom:12px;font-size:15px}
+ul{margin:0 0 12px 20px} li{margin-bottom:6px;font-size:15px}
+.steps{counter-reset:s;list-style:none;margin:14px 0}
+.steps li{position:relative;padding:4px 0 4px 38px;margin-bottom:10px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);color:var(--gold-deep);font-family:var(--serif);display:flex;align-items:center;justify-content:center;font-size:14px}
+.note{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--taupe);margin:18px 0}
+strong{font-weight:500;color:var(--ink)}
+.foot{border-top:1px solid var(--line);margin-top:40px;padding-top:20px;font-size:13px;color:var(--taupe);text-align:center}
+</style>
+</head>
+<body>
+<header class="head"><div class="in"><a href="index.html" class="logo">CÂLINE</a><a href="checkout.html" class="back">← Retour</a></div></header>
+<div class="wrap">
+  <h1>Retours &amp; Remboursements</h1>
+  <div class="upd">Votre satisfaction, notre priorité</div>
+
+
+  <h2>Droit de rétractation — 14 jours</h2>
+  <p>Vous disposez d’un délai de <strong>14 jours</strong> à compter de la réception de votre commande pour changer d’avis, sans avoir à vous justifier, conformément au Code de la consommation.</p>
+
+  <h2>Conditions de retour</h2>
+  <ul>
+    <li>Article non utilisé, dans son état et son emballage d’origine</li>
+    <li>Accompagné de la preuve d’achat</li>
+    <li>Pour des raisons d’hygiène, certains articles ne peuvent être repris s’ils ont été ouverts</li>
+  </ul>
+
+  <h2>Comment retourner un article</h2>
+  <ol class="steps">
+    <li>Contactez notre service client en indiquant votre numéro de commande.</li>
+    <li>Nous vous communiquons l’adresse et la procédure de retour.</li>
+    <li>Renvoyez l’article soigneusement emballé.</li>
+    <li>Dès réception et vérification, nous procédons au remboursement.</li>
+  </ol>
+
+  <h2>Remboursement</h2>
+  <p>Le remboursement est effectué sur le moyen de paiement utilisé lors de la commande, dans un délai de <strong>14 jours</strong> suivant la réception du retour. Les frais de retour sont à la charge du client, sauf en cas d’erreur de notre part ou de produit défectueux.</p>
+
+  <h2>Produit défectueux ou erreur</h2>
+  <p>Si vous recevez un article endommagé ou non conforme, contactez-nous rapidement : nous prenons en charge l’échange ou le remboursement, frais inclus.</p>
+
+  <p><strong>Contact :</strong> <a href="mailto:contact@calineanimal.com">contact@calineanimal.com</a></p>
+
+  <div class="foot">CÂLINE — Accessoires premium pour chiens &amp; chats</div>
+</div>
+</body>
+</html>

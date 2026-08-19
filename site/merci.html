@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merci · CÂLINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fbf8f2;--paper:#fffdf9;--ink:#3c342a;--taupe:#8b7f6d;--gold:#c2a35e;--gold-deep:#a8863f;--line:#e7dcc9;--green:#2c7a4d;--serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:radial-gradient(120% 70% at 50% 0%,#f6efe3,#efe5d4);color:var(--ink);font-weight:300;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;max-width:520px;width:100%;padding:clamp(34px,6vw,52px);text-align:center;box-shadow:0 30px 70px rgba(60,52,42,.12)}
+.check{width:74px;height:74px;border-radius:50%;background:#e6f1ea;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.check svg{width:36px;height:36px;stroke:var(--green);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.logo{font-family:var(--serif);font-size:22px;letter-spacing:.16em;color:var(--gold-deep);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(28px,5vw,38px);font-weight:600;margin-bottom:14px}
+p{color:var(--taupe);font-size:15px;line-height:1.7;margin-bottom:10px}
+.ref{display:inline-block;margin:14px 0 4px;font-size:12px;letter-spacing:.06em;color:var(--taupe);background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:8px 14px;word-break:break-all}
+.btn{display:inline-block;margin-top:28px;padding:14px 34px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;border-radius:12px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:.3s}
+.btn:hover{filter:brightness(1.05);box-shadow:0 12px 30px rgba(168,134,63,.28)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">CÂLINE</div>
+  <div class="check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+  <h1>Merci.</h1>
+  <p>Votre confiance nous touche. Votre commande est confirmée.</p>
+  <p>Un e-mail de confirmation vous parvient dans un instant. Nous préparons vos attentions avec le plus grand soin — pour ceux qui comptent le plus.</p>
+  <div class="ref" id="ref"></div>
+  <div><a href="index.html" class="btn">Retour à la boutique</a></div>
+</div>
+<script>
+/* Vider le panier et les infos de checkout après un paiement réussi */
+try{ localStorage.removeItem('caline_cart'); }catch(e){}
+try{ localStorage.removeItem('caline_checkout'); }catch(e){}
+try{ sessionStorage.removeItem('caline_visit'); }catch(e){}
+/* Afficher la référence de session Stripe (indicative) */
+try{
+  var sid=new URLSearchParams(location.search).get('session_id');
+  if(sid){ document.getElementById('ref').textContent='Référence : '+sid; }
+  else{ document.getElementById('ref').style.display='none'; }
+}catch(e){}
+</script>
+</body>
+</html>

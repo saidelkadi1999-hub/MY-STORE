@@ -1,0 +1,34 @@
+CÂLINE — Fichiers Netlify pour Stripe (à ajouter au dépôt GitHub)
+================================================================
+
+STRUCTURE À COPIER TELLE QUELLE À LA RACINE DU DÉPÔT :
+
+  netlify.toml
+  netlify/functions/create-checkout-session.js
+  netlify/functions/stripe-webhook.js
+
+(NE PAS mettre ces fichiers dans le dossier "site". netlify.toml pointe déjà
+ publish="site" ; les fonctions vont dans netlify/functions à la RACINE.)
+
+VARIABLES D'ENVIRONNEMENT NETLIFY (Site configuration → Environment variables) :
+  STRIPE_SECRET_KEY            = sk_test_... (mode Test)
+  STRIPE_WEBHOOK_SECRET        = whsec_...   (signing secret du webhook Stripe)
+  SUPABASE_URL                 = https://obxrzznzqzhxwywlqsms.supabase.co
+  SUPABASE_SERVICE_ROLE_KEY    = (clé service_role secrète de Supabase)
+  SITE_URL (optionnel)         = https://calineanimal.netlify.app
+
+WEBHOOK STRIPE (Developers → Webhooks) :
+  URL       = https://calineanimal.netlify.app/.netlify/functions/stripe-webhook
+  Événement = checkout.session.completed
+  Mode      = Test (même mode que la clé sk_test)
+
+ZÉRO DÉPENDANCE : aucun "npm install" requis (fetch/crypto natifs Node 18).
+
+TEST : après déploiement, ouvrir
+  https://calineanimal.netlify.app/.netlify/functions/create-checkout-session
+  → doit renvoyer {"error":"Method Not Allowed"} (preuve que la fonction tourne).
+
+BASE DE DONNÉES (déjà en place normalement) :
+  - table  checkout_payloads(token text, payload jsonb, ...)
+  - RPC    create_paid_order(p_token, p_session, p_payment_intent)
+  Si absentes, exécuter le fichier db/caline-stripe-schema.sql du projet.

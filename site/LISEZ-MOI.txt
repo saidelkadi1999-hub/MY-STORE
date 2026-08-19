@@ -1,0 +1,2 @@
+CÂLINE — garder index.html + images/ + videos/ ensemble.
+Netlify -> Add new site -> Deploy manually -> glisser le DOSSIER entier.

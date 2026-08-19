@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Journal CÂLINE</title>
+<meta name="description" content="Le Journal CÂLINE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif;--ivory:#FAF7F2;--beige:#f2eae0;--gold:#C8A45A;--gold-deep:#A67C2E;--ink:#2b2620;--taupe:#7e6a50;--line:rgba(200,164,90,.2)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--ivory);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.7}
+a{color:inherit}img{display:block;max-width:100%}
+.top{position:sticky;top:0;z-index:40;background:rgba(250,247,242,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:920px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.top-brand{font-family:var(--serif);font-weight:600;font-size:22px;letter-spacing:.24em;padding-left:.24em;text-decoration:none;color:var(--ink)}
+.top-back{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);text-decoration:none}
+.art{max-width:760px;margin:0 auto;padding:clamp(28px,4vw,44px) 24px 80px}
+.bc{font-size:12px;color:var(--taupe);letter-spacing:.04em;margin-bottom:26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.bc a{text-decoration:none;color:var(--taupe)}.bc a:hover{color:var(--gold-deep)}.bc span{opacity:.5}
+.a-badge{display:inline-block;background:linear-gradient(135deg,#c8a45a,#a67c2e);color:#fff;font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:7px 15px;border-radius:999px;margin-bottom:20px}
+.a-title{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.4vw,50px);line-height:1.12;margin-bottom:20px}
+.a-meta{display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:13px;color:var(--taupe);padding-bottom:26px;border-bottom:1px solid var(--line);margin-bottom:30px}
+.a-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+.a-hero{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px;box-shadow:0 24px 54px -24px rgba(120,90,40,.45);margin-bottom:36px;cursor:zoom-in;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.a-hero:hover{transform:scale(1.01)}
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(30,22,14,.92);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s;cursor:zoom-out;backdrop-filter:blur(4px)}
+.lightbox.open{opacity:1;visibility:visible}
+.lightbox img{max-width:96%;max-height:92%;border-radius:14px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6);transform:scale(.94);transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.lightbox.open img{transform:scale(1)}
+.lightbox-x{position:absolute;top:22px;right:26px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);border:none;color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s}
+.lightbox-x:hover{background:rgba(255,255,255,.28)}
+.toc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 26px;margin-bottom:38px}
+.toc h2{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px}
+.toc ol{list-style:none;counter-reset:t}
+.toc li{counter-increment:t;margin:9px 0}
+.toc a{text-decoration:none;color:var(--ink);font-size:15px;display:flex;gap:12px;transition:color .3s}
+.toc a:hover{color:var(--gold-deep)}
+.toc a::before{content:counter(t,decimal-leading-zero);color:var(--gold);font-family:var(--serif);font-weight:600;font-size:15px}
+.body{font-size:17px;color:#3a3128}
+.body h2{font-family:var(--serif);font-weight:600;font-size:clamp(23px,2.6vw,30px);color:var(--ink);margin:38px 0 16px;scroll-margin-top:90px}
+.body h3{font-family:var(--serif);font-weight:600;font-size:clamp(19px,2vw,23px);color:var(--gold-deep);margin:28px 0 12px}
+.body p{margin:0 0 20px}
+.body p a{color:var(--gold-deep);text-decoration:underline;text-underline-offset:3px}
+.faq{margin-top:52px;border-top:1px solid var(--line);padding-top:40px}
+.faq-h{font-family:var(--serif);font-weight:600;font-size:clamp(24px,3vw,34px);margin-bottom:24px}
+.faq-item{border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden;background:#fff}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:18px 22px;font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq-q .ic{flex:none;width:22px;height:22px;position:relative;transition:transform .3s}
+.faq-q .ic::before,.faq-q .ic::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--gold-deep)}
+.faq-q .ic::before{width:12px;height:2px}.faq-q .ic::after{width:2px;height:12px;transition:transform .3s}
+.faq-item.open .ic::after{transform:translate(-50%,-50%) scaleY(0)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-a p{padding:0 22px 20px;font-family:var(--sans);font-weight:300;font-size:15px;color:var(--taupe);line-height:1.7}
+.author{display:flex;align-items:center;gap:16px;margin-top:48px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.author .av{width:52px;height:52px;border-radius:50%;background:linear-gradient(140deg,#e6c877,#c8a45a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:600;color:#fff;font-size:22px;flex:none}
+.author .n{font-family:var(--serif);font-weight:600;font-size:17px}
+.author .r{font-size:12.5px;color:var(--taupe);letter-spacing:.04em}
+.related{margin-top:64px}
+.related-h{font-family:var(--serif);font-weight:600;font-size:clamp(24px,3vw,32px);margin-bottom:24px;text-align:center}
+.rel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.rel-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;transition:transform .4s,box-shadow .4s}
+.rel-card:hover{transform:translateY(-4px);box-shadow:0 22px 44px -20px rgba(120,90,40,.4)}
+.rel-card img{aspect-ratio:3/2;object-fit:cover;width:100%}
+.rel-b{padding:16px 18px}
+.rel-cat{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:600}
+.rel-t{font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.25;margin-top:6px;color:var(--ink)}
+.cta-all{text-align:center;margin-top:60px}
+.cta-all a{display:inline-block;background:linear-gradient(135deg,#c8a45a,#a67c2e);color:#fff;font-weight:500;font-size:12px;letter-spacing:.2em;text-transform:uppercase;padding:15px 40px;border-radius:999px;text-decoration:none;box-shadow:0 12px 32px -10px rgba(166,124,46,.5)}
+.foot{text-align:center;padding:48px 24px;color:var(--taupe);font-size:12px;letter-spacing:.1em;border-top:1px solid var(--line)}
+@media(max-width:640px){.rel-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in"><a class="top-brand" href="index.html">CÂLINE</a><a class="top-back" href="blog.html">&larr; Le Journal</a></div></header>
+
+<article class="art" id="art">
+  <p style="text-align:center;color:var(--taupe);padding:60px 0">Chargement…</p>
+</article>
+
+<footer class="foot">© CÂLINE — Le Journal · Maison française</footer>
+
+<script src="blog-data.js"></script>
+<script>
+(function(){
+  var B=window.CALINE_BLOG;
+  var slug=new URLSearchParams(location.search).get('slug');
+  var a=B?B.bySlug(slug):null;
+  var host=document.getElementById('art');
+  if(!a){ host.innerHTML='<p style="text-align:center;padding:60px 0;color:var(--taupe)">Article introuvable. <a href="blog.html" style="color:var(--gold-deep)">Retour au Journal</a></p>'; return; }
+
+  // SEO
+  document.title=a.title+' — Le Journal CÂLINE';
+  function meta(sel,attr,val){var m=document.querySelector(sel);if(m)m.setAttribute(attr,val);}
+  meta('meta[name=description]','content',a.excerpt);
+  function og(prop,val){var m=document.createElement('meta');m.setAttribute('property',prop);m.setAttribute('content',val);document.head.appendChild(m);}
+  og('og:type','article');og('og:title',a.title);og('og:description',a.excerpt);og('og:image',a.image);og('og:site_name','CÂLINE');
+
+  // TOC
+  var toc=(a.toc||[]).map(function(t){return '<li><a href="#'+t.id+'">'+t.t+'</a></li>';}).join('');
+  // FAQ
+  var faq=(a.faq||[]).map(function(f){return '<div class="faq-item"><button class="faq-q">'+f.q+'<span class="ic"></span></button><div class="faq-a"><p>'+f.a+'</p></div></div>';}).join('');
+  // Related
+  var rel=(a.related||[]).map(function(s){var r=B.bySlug(s);if(!r)return '';return '<a class="rel-card" href="article.html?slug='+encodeURIComponent(r.slug)+'"><img src="'+r.image+'" alt="'+r.title+'" loading="lazy"><div class="rel-b"><span class="rel-cat">'+r.category+'</span><div class="rel-t">'+r.title+'</div></div></a>';}).join('');
+
+  host.innerHTML=
+    '<nav class="bc" aria-label="Fil d\'Ariane"><a href="index.html">Accueil</a><span>/</span><a href="blog.html">Journal</a><span>/</span><a href="blog.html">'+a.category+'</a><span>/</span>'+a.title+'</nav>'
+    +'<span class="a-badge">'+a.category+'</span>'
+    +'<h1 class="a-title">'+a.title+'</h1>'
+    +'<div class="a-meta"><span>'+a.author+'</span><span class="dot"></span><span>'+B.fmtDate(a.date)+'</span><span class="dot"></span><span>'+a.readMin+' min de lecture</span></div>'
+    +'<img class="a-hero" src="'+a.image+'" alt="'+a.title+'">'
+    +(toc?'<nav class="toc"><h2>Sommaire</h2><ol>'+toc+'</ol></nav>':'')
+    +'<div class="body">'+a.html+'</div>'
+    +(faq?'<section class="faq"><h2 class="faq-h">Questions fréquentes</h2>'+faq+'</section>':'')
+    +'<div class="author"><div class="av">C</div><div><div class="n">'+a.author+'</div><div class="r">Rédaction du Journal CÂLINE</div></div></div>'
+    +(rel?'<section class="related"><h2 class="related-h">À lire également</h2><div class="rel-grid">'+rel+'</div></section>':'')
+    +'<div class="cta-all"><a href="blog.html">Voir tous les articles</a></div>';
+
+  // FAQ accordéon
+  host.querySelectorAll('.faq-q').forEach(function(b){
+    b.onclick=function(){
+      var it=b.parentElement, ans=b.nextElementSibling;
+      var open=it.classList.toggle('open');
+      ans.style.maxHeight=open?ans.scrollHeight+'px':'0';
+    };
+  });
+
+  // Schemas
+  function addSchema(obj){var s=document.createElement('script');s.type='application/ld+json';s.textContent=JSON.stringify(obj);document.head.appendChild(s);}
+  addSchema({"@context":"https://schema.org","@type":"Article","headline":a.title,"description":a.excerpt,"image":a.image,"datePublished":a.date,"author":{"@type":"Organization","name":a.author},"publisher":{"@type":"Organization","name":"CÂLINE"},"articleSection":a.category});
+  addSchema({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":location.origin+"/index.html"},{"@type":"ListItem","position":2,"name":"Journal","item":location.origin+"/blog.html"},{"@type":"ListItem","position":3,"name":a.title}]});
+  if(a.faq&&a.faq.length) addSchema({"@context":"https://schema.org","@type":"FAQPage","mainEntity":a.faq.map(function(f){return {"@type":"Question","name":f.q,"acceptedAnswer":{"@type":"Answer","text":f.a}};})});
+
+  // Lightbox : agrandir l'image au clic
+  var heroImg=host.querySelector('.a-hero');
+  var lb=document.getElementById('lightbox'), lbImg=document.getElementById('lightboxImg');
+  if(heroImg&&lb){
+    heroImg.addEventListener('click',function(){ lbImg.src=heroImg.getAttribute('src'); lb.classList.add('open'); document.body.style.overflow='hidden'; });
+    var closeLb=function(){ lb.classList.remove('open'); document.body.style.overflow=''; };
+    lb.addEventListener('click',closeLb);
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeLb(); });
+  }
+})();
+</script>
+<div class="lightbox" id="lightbox"><button class="lightbox-x" aria-label="Fermer">&times;</button><img id="lightboxImg" src="" alt=""></div>
+</body>
+</html>

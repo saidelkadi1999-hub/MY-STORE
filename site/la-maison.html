@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Maison — CÂLINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbf8f2; --paper:#fffdf9; --ink:#3c342a; --taupe:#8b7f6d;
+    --gold:#c2a35e; --gold-deep:#a8863f; --line:#e7dcc9;
+    --serif:'Cormorant Garamond',Georgia,serif; --sans:'Jost',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--cream);line-height:1.75;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+
+  /* header sobre : logo centré, retour boutique */
+  header{position:sticky;top:0;z-index:20;background:rgba(251,248,242,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .hbar{max-width:1180px;margin:0 auto;padding:18px 26px;display:flex;justify-content:center;align-items:center}
+  .hbar img{height:60px;width:auto;display:block}
+  .backlink{position:absolute;left:26px;font-family:var(--sans);font-weight:300;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--taupe);text-decoration:none;transition:color .4s}
+  .backlink:hover{color:var(--ink)}
+
+  /* la lettre */
+  .letter{max-width:660px;margin:0 auto;padding:clamp(70px,12vw,140px) 26px clamp(90px,14vw,160px)}
+  .opening{font-family:var(--serif);font-style:italic;font-size:clamp(15px,2vw,17px);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);text-align:center;margin-bottom:clamp(48px,8vw,80px)}
+
+  section.blk{margin:0 0 clamp(64px,10vw,110px)}
+  section.blk:last-of-type{margin-bottom:0}
+  .blk h2{font-family:var(--serif);font-weight:500;font-size:clamp(26px,4.4vw,38px);color:var(--ink);line-height:1.25;margin-bottom:clamp(20px,3vw,28px);letter-spacing:.005em}
+  .blk p{font-family:var(--serif);font-weight:400;font-size:clamp(18px,2.5vw,21px);color:var(--ink);line-height:1.7;margin-bottom:16px}
+  .blk p:last-child{margin-bottom:0}
+  .blk .muted{color:var(--taupe)}
+
+  /* ce que nous refusons : liste retenue */
+  .refus{list-style:none;margin-top:8px}
+  .refus li{font-family:var(--serif);font-size:clamp(18px,2.5vw,21px);color:var(--ink);padding:14px 0;border-bottom:1px solid var(--line)}
+  .refus li:last-child{border-bottom:none}
+
+  /* signature de Maison */
+  .signature{text-align:center;padding-top:clamp(40px,7vw,80px);border-top:1px solid var(--line)}
+  .signature p{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3.4vw,30px);color:var(--ink);line-height:1.5;max-width:30ch;margin:0 auto clamp(22px,3vw,30px)}
+  .signature span{font-family:var(--sans);font-weight:300;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-deep)}
+
+  /* footer minimal, cohérent */
+  footer{border-top:1px solid var(--line);background:var(--paper)}
+  .fwrap{max-width:1180px;margin:0 auto;padding:clamp(40px,6vw,60px) 26px;text-align:center}
+  .fsign{font-family:var(--serif);font-style:italic;font-size:clamp(16px,2vw,19px);color:var(--taupe);max-width:520px;margin:0 auto 26px;line-height:1.5}
+  .flinks{font-family:var(--sans);font-weight:300;font-size:13px;letter-spacing:.06em;color:var(--taupe)}
+  .flinks a{text-decoration:none;margin:0 6px}
+  .flinks a:hover{color:var(--ink)}
+  .fcop{margin-top:16px;font-size:12px;letter-spacing:.1em;color:var(--taupe)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hbar">
+    <a class="backlink" href="index.html">← La boutique</a>
+    <a href="index.html"><img src="images/logo-mark.png" alt="CÂLINE"></a>
+  </div>
+</header>
+
+<main class="letter">
+
+  <p class="opening">La Maison CÂLINE</p>
+
+  <!-- 1 · Pourquoi CÂLINE existe -->
+  <section class="blk">
+    <h2>Pourquoi nous existons</h2>
+    <p>Ceux qui partagent nos vies ne peuvent pas dire ce dont ils ont besoin.</p>
+    <p class="muted">Nous le faisons pour eux. C'est notre seule raison d'être.</p>
+  </section>
+
+  <!-- 2 · Notre façon de choisir -->
+  <section class="blk">
+    <h2>Notre façon de choisir</h2>
+    <p>Nous ne choisissons pas ce qui se vend. Nous choisissons ce qui apaise.</p>
+    <p class="muted">Une seule question compte&nbsp;: le quotidien de l'animal en sera-t-il plus doux&nbsp;? Sinon, nous renonçons.</p>
+  </section>
+
+  <!-- 3 · Ce que nous refusons -->
+  <section class="blk">
+    <h2>Ce que nous refusons</h2>
+    <ul class="refus">
+      <li>Le superflu, quand il n'apporte rien à l'animal.</li>
+      <li>Ce qui plaît au maître mais gêne l'animal.</li>
+      <li>L'urgence et les promesses trop belles.</li>
+      <li>Tout compromis sur le confort et la sécurité.</li>
+    </ul>
+  </section>
+
+  <!-- 4 · Nos engagements -->
+  <section class="blk">
+    <h2>Nos engagements</h2>
+    <p>Envers les animaux&nbsp;: leur bien-être, jamais l'effet.</p>
+    <p class="muted">Envers leurs familles&nbsp;: la clarté, des retours sous quatorze jours, et une Maison qui répond.</p>
+  </section>
+
+  <!-- 5 · Signature -->
+  <section class="signature">
+    <p>Prendre soin de ceux qui ne pourront jamais le demander, ni le savoir, ni le rendre.</p>
+    <span>CÂLINE — Maison française</span>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fwrap">
+    <div class="fsign">Prendre soin de ceux qui ne pourront jamais le demander.</div>
+    <div class="flinks">
+      <a href="index.html">La boutique</a> ·
+      <a href="returns.html">Livraison &amp; Retours</a> ·
+      <a href="privacy.html">Confidentialité</a> ·
+      <a href="cgv.html">CGV</a>
+    </div>
+    <div class="fcop">© 2026 CÂLINE — Maison française</div>
+  </div>
+</footer>
+
+</body>
+</html>
