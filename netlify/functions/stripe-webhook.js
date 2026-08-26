@@ -44,7 +44,7 @@ exports.handler = async function (event) {
             body: JSON.stringify({
               p_token: token,
               p_session: s.id,
-              p_payment_intent: s.payment_intent || null
+              p_pi_intent: s.payment_intent || null
             })
           });
           if (!r.ok) {
