@@ -470,7 +470,7 @@ async function startPayment(order){
   setPayLoading(true);
   saveForm();
   try{
-    var res=await fetch('/.netlify/functions/create-checkout-session',{
+    var res=await fetch('/api/create-checkout-session',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({items:CART, customer:order.customer})
     });
