@@ -1,0 +1,30 @@
+# ============================================================
+#  CÂLINE — En-têtes Netlify (sécurité + cache)
+#  Aucun impact visuel/fonctionnel. Cache modéré (pas d'immutable)
+#  car les fichiers ne sont pas versionnés par hash.
+# ============================================================
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), usb=(), payment=(self "https://js.stripe.com")
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self' data:; connect-src 'self' https://*.supabase.co https://api.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'
+
+# HTML : toujours revalider (les pages doivent refléter les mises à jour)
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# JS/CSS de données : cache court (contenu qui évolue)
+/*.js
+  Cache-Control: public, max-age=3600
+/*.css
+  Cache-Control: public, max-age=3600
+
+# Images : cache 7 jours
+/images/*
+  Cache-Control: public, max-age=604800
+# Vidéos : cache 7 jours
+/videos/*
+  Cache-Control: public, max-age=604800

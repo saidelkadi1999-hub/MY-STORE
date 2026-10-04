@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>CÂLINE · Administration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="caline-config.js"></script>
+<style>
+:root{
+  --cream:#fbf8f2; --beige:#f2eae0; --paper:#fffdf9; --ink:#3c342a; --taupe:#8b7f6d;
+  --gold:#c2a35e; --gold-deep:#a8863f; --gold-soft:#dcc9a0; --line:#e7dcc9;
+  --serif:'Cormorant Garamond',serif; --sans:'Jost',sans-serif;
+  --green:#2c7a4d; --red:#b0573f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);font-weight:300;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.serif{font-family:var(--serif)}
+.hidden{display:none!important}
+
+/* ---------- LOGIN ---------- */
+.login-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(120% 80% at 50% 0%,#f6efe3,#efe5d4)}
+.login-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(30px,6vw,46px);width:100%;max-width:400px;box-shadow:0 30px 70px rgba(60,52,42,.10);text-align:center}
+.brand{font-family:var(--serif);font-size:34px;letter-spacing:.14em;color:var(--gold-deep);margin-bottom:4px}
+.brand .paw{display:block;font-size:18px;margin-bottom:2px}
+.login-sub{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--taupe);margin-bottom:30px}
+.field{text-align:left;margin-bottom:16px}
+.field label{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--taupe);margin-bottom:7px}
+.field input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;background:var(--cream);
+  font-family:var(--sans);font-size:15px;color:var(--ink);transition:.2s}
+.field input:focus{outline:none;border-color:var(--gold);background:#fff}
+.btn-gold{width:100%;padding:14px;border:none;border-radius:11px;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;font-family:var(--sans);
+  font-size:13px;letter-spacing:.16em;text-transform:uppercase;transition:.3s;margin-top:6px}
+.btn-gold:hover{filter:brightness(1.05);box-shadow:0 10px 26px rgba(168,134,63,.28)}
+.btn-gold:disabled{opacity:.6;cursor:default}
+.msg{font-size:13px;margin-top:16px;min-height:18px}
+.msg.err{color:var(--red)} .msg.ok{color:var(--green)}
+
+/* ---------- DASHBOARD ---------- */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:16px clamp(16px,4vw,40px);background:rgba(251,248,242,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.topbar .brand{font-size:24px;margin:0}
+.topbar .right{display:flex;align-items:center;gap:14px}
+.who{font-size:12px;color:var(--taupe);letter-spacing:.04em}
+.logout{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);
+  border:1px solid var(--gold-soft);background:none;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.25s;font-family:var(--sans)}
+.logout:hover{background:var(--gold-deep);color:#fff;border-color:var(--gold-deep)}
+.navlink{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);text-decoration:none;padding:8px 12px;border-radius:8px;transition:.2s}
+.navlink:hover{background:var(--beige)}
+.shell{max-width:1180px;margin:0 auto;padding:clamp(20px,4vw,38px) clamp(16px,4vw,40px) 70px}
+.eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:6px}
+.h-title{font-family:var(--serif);font-size:clamp(26px,4vw,34px);font-weight:600;margin-bottom:26px}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:22px 20px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(var(--gold),var(--gold-deep))}
+.kpi .lab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--taupe);margin-bottom:12px}
+.kpi .val{font-family:var(--serif);font-size:clamp(26px,3.4vw,36px);font-weight:600;color:var(--ink);line-height:1}
+.kpi .val small{font-size:18px;color:var(--gold-deep)}
+
+/* panels */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:22px}
+.panel h3{font-family:var(--serif);font-size:21px;font-weight:600;margin-bottom:4px}
+.panel .ph-sub{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);margin-bottom:18px}
+.chart-box{position:relative;height:240px}
+
+.list{list-style:none}
+.list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:none}
+.rank{font-family:var(--serif);font-size:18px;color:var(--gold-deep);width:26px;flex:none}
+.li-main{flex:1;min-width:0}
+.li-name{font-size:14.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-meta{font-size:12px;color:var(--taupe);margin-top:2px}
+.li-val{font-family:var(--serif);font-size:17px;color:var(--ink);flex:none}
+
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);padding:0 14px 12px;white-space:nowrap}
+td{padding:13px 14px;border-top:1px solid var(--line);white-space:nowrap;color:var(--ink)}
+td.num{font-family:var(--serif);font-size:15px}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;letter-spacing:.04em}
+.b-pending{background:#f3ead4;color:#9a7b2e}
+.b-paid,.b-processing{background:#e3f0e6;color:#2c7a4d}
+.b-shipped,.b-delivered{background:#e2ecf4;color:#3667a0}
+.b-cancelled,.b-refunded{background:#f4e3de;color:#b0573f}
+.empty{text-align:center;color:var(--taupe);padding:34px 0;font-size:14px}
+.empty .serif{display:block;font-size:20px;color:var(--ink);margin-bottom:6px}
+
+@media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media(max-width:480px){.kpis{grid-template-columns:1fr 1fr;gap:12px}.kpi{padding:18px 16px}}
+
+.rev-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:-14px 0 30px}
+.rev-card{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:16px}
+.rev-card .rc-lab{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);margin-bottom:9px}
+.rev-card .rc-val{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);line-height:1}
+@media(max-width:900px){.rev-row{grid-template-columns:1fr 1fr;gap:12px}}
+
+/* Executive Dashboard v1.1 */
+.rev-row{grid-template-columns:repeat(4,1fr)}
+@media(min-width:901px){.kpis{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpis{grid-template-columns:1fr 1fr}}
+.rc-delta{font-family:var(--sans);font-size:11px;font-weight:600;margin-top:6px;letter-spacing:.02em;min-height:14px}
+.rc-delta.up{color:#3f9d5a}.rc-delta.down{color:#c0563f}
+.li-date{font-weight:400;color:var(--taupe);font-size:12px}
+
+.chart-box canvas{max-width:100%!important}
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="login" class="login-wrap">
+  <div class="login-card">
+    <div class="brand"><span class="paw">🐾</span>CÂLINE</div>
+    <div class="login-sub">Espace administration</div>
+    <div class="field">
+      <label>Adresse e-mail</label>
+      <input id="email" type="email" autocomplete="username" placeholder="vous@email.com">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="••••••••">
+    </div>
+    <button id="loginBtn" class="btn-gold">Se connecter</button>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+</div>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="dash" class="hidden">
+  <div class="topbar">
+    <div class="brand serif">CÂLINE</div>
+    <div class="right">
+      <a href="admin-products.html" class="navlink">Produits</a>
+      <a href="admin-orders.html" class="navlink">Commandes</a>
+      <a href="admin-analytics.html" class="navlink">Analytics</a>
+      <a href="admin-customers.html" class="navlink">Clients</a>
+      <span class="who" id="who"></span>
+      <button class="logout" id="logout">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="eyebrow">Tableau de bord</div>
+    <h1 class="h-title">Vue d’ensemble</h1>
+
+    <div class="kpis">
+      <div class="kpi"><div class="lab">Chiffre d’affaires</div><div class="val" id="kSales">—</div></div>
+      <div class="kpi"><div class="lab">Commandes</div><div class="val" id="kOrders">—</div></div>
+      <div class="kpi"><div class="lab">Clients</div><div class="val" id="kCustomers">—</div></div>
+      <div class="kpi"><div class="lab">Visiteurs</div><div class="val" id="kVisitors">—</div></div>
+      <div class="kpi"><div class="lab">Panier moyen</div><div class="val" id="revAov">—</div></div>
+      <div class="kpi"><div class="lab">Taux de conversion</div><div class="val" id="kConv">—</div></div>
+    </div>
+
+    <div class="rev-row">
+      <div class="rev-card"><div class="rc-lab">Aujourd’hui</div><div class="rc-val" id="revToday">—</div></div>
+      <div class="rev-card"><div class="rc-lab">7 jours</div><div class="rc-val" id="rev7">—</div><div class="rc-delta" id="d7"></div></div>
+      <div class="rev-card"><div class="rc-lab">30 jours</div><div class="rc-val" id="rev30">—</div><div class="rc-delta" id="d30"></div></div>
+      <div class="rev-card"><div class="rc-lab">Cette année</div><div class="rc-val" id="revYear">—</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Revenus quotidiens</h3>
+        <div class="ph-sub">14 derniers jours</div>
+        <div class="chart-box"><canvas id="dailyChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Revenus mensuels</h3>
+        <div class="ph-sub">12 derniers mois</div>
+        <div class="chart-box"><canvas id="monthlyChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Meilleures ventes</h3>
+        <div class="ph-sub">Produits les plus vendus</div>
+        <ul class="list" id="topList"></ul>
+      </div>
+      <div class="panel">
+        <h3>Dernières commandes</h3>
+        <div class="ph-sub">Activité récente</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>N°</th><th>Client</th><th>Statut</th><th>Total</th><th>Date</th></tr></thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Nouveaux clients</h3>
+        <div class="ph-sub">Derniers inscrits</div>
+        <ul class="list" id="newCustomers"></ul>
+      </div>
+      <div class="panel">
+        <h3>Top pays</h3>
+        <div class="ph-sub">Par chiffre d’affaires</div>
+        <ul class="list" id="topCountries"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var cfg=window.CALINE_SUPABASE||{};
+var sb=(cfg.url&&cfg.anonKey&&window.supabase)?window.supabase.createClient(cfg.url,cfg.anonKey):null;
+var $=function(id){return document.getElementById(id);};
+var eur=function(n){return (Number(n)||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';};
+var num=function(n){return (Number(n)||0).toLocaleString('fr-FR');};
+var dCharts={};
+
+function setMsg(t,cls){var m=$('loginMsg');m.textContent=t||'';m.className='msg '+(cls||'');}
+
+function showLogin(){ $('login').classList.remove('hidden'); $('dash').classList.add('hidden'); }
+function showDash(){ $('login').classList.add('hidden'); $('dash').classList.remove('hidden'); }
+
+async function doLogin(){
+  if(!sb){setMsg('Configuration Supabase manquante dans admin.html.','err');return;}
+  var email=$('email').value.trim(), pass=$('password').value;
+  if(!email||!pass){setMsg('Renseignez e-mail et mot de passe.','err');return;}
+  $('loginBtn').disabled=true; setMsg('Connexion…','');
+  var r=await sb.auth.signInWithPassword({email:email,password:pass});
+  $('loginBtn').disabled=false;
+  if(r.error){setMsg('Identifiants incorrects.','err');return;}
+  enter();
+}
+
+async function enter(){
+  // vérifie le rôle admin via une fonction protégée
+  var ov=await sb.rpc('admin_overview');
+  if(ov.error){ setMsg('Accès non autorisé pour ce compte.','err'); await sb.auth.signOut(); showLogin(); return; }
+  var u=(await sb.auth.getUser()).data.user;
+  $('who').textContent=u?u.email:'';
+  showDash();
+  paintOverview(ov.data);
+  refreshCountersDirect();   // compteurs lus DIRECTEMENT depuis les tables (fiables)
+  loadRest();
+  loadDashExtra();
+}
+
+// ---- Compteurs authoritatifs : lus directement depuis orders/customers ----
+// (indépendants de la RPC admin_overview ; passent par RLS "admin" = is_admin()).
+async function refreshCountersDirect(){
+  // Nombre de commandes (compte exact, sans charger les lignes)
+  try{
+    var oc = await sb.from('orders').select('id', { count:'exact', head:true });
+    if(!oc.error && typeof oc.count === 'number'){ $('kOrders').textContent = num(oc.count); window._ordCount = oc.count; }
+    else if(oc.error){ console.warn('[compteur commandes]', oc.error.message||oc.error); }
+  }catch(e){ console.warn('[compteur commandes]', e); }
+  // Chiffre d'affaires (statuts payés) + panier moyen
+  try{
+    var rs = await sb.from('orders').select('total,status').limit(10000);
+    if(!rs.error && rs.data){
+      var paid = { paid:1, processing:1, shipped:1, delivered:1 };
+      var sum = 0, n = 0;
+      rs.data.forEach(function(o){ if(paid[o.status]){ sum += Number(o.total)||0; n++; } });
+      $('kSales').innerHTML = eur(sum).replace(' €',' <small>€</small>');
+      var av = document.getElementById('revAov'); if(av){ av.textContent = eur(n>0 ? sum/n : 0); }
+    } else if(rs.error){ console.warn('[compteur ventes]', rs.error.message||rs.error); }
+  }catch(e){ console.warn('[compteur ventes]', e); }
+  // Nombre de clients
+  try{
+    var cc = await sb.from('customers').select('id', { count:'exact', head:true });
+    if(!cc.error && typeof cc.count === 'number'){ $('kCustomers').textContent = num(cc.count); }
+    else if(cc.error){ console.warn('[compteur clients]', cc.error.message||cc.error); }
+  }catch(e){ console.warn('[compteur clients]', e); }
+  // Taux de conversion = commandes / visiteurs (visiteurs depuis la RPC déjà affichée)
+  try{
+    var vis = Number(window._ovVisitors || 0);
+    var ord = Number(window._ordCount || 0);
+    var cv = vis>0 ? (ord/vis*100) : 0;
+    var ce = document.getElementById('kConv'); if(ce){ ce.textContent = (cv ? cv.toFixed(1) : '0') + ' %'; }
+  }catch(e){}
+}
+
+function paintOverview(d){
+  d=d||{};
+  window._ovVisitors = Number(d.visitors_count)||0;
+  $('kSales').innerHTML=eur(d.total_sales).replace(' €',' <small>€</small>');
+  $('kOrders').textContent=num(d.orders_count);
+  $('kCustomers').textContent=num(d.customers_count);
+  $('kVisitors').textContent=num(d.visitors_count);
+  var _aov=(Number(d.orders_count)>0)?(Number(d.total_sales)/Number(d.orders_count)):0;
+  var _av=document.getElementById('revAov'); if(_av)_av.textContent=eur(_aov);
+  var _cv=(Number(d.visitors_count)>0)?(Number(d.orders_count)/Number(d.visitors_count)*100):0;
+  var _ce=document.getElementById('kConv'); if(_ce)_ce.textContent=(_cv?_cv.toFixed(1):'0')+' %';
+}
+
+async function loadRest(){
+  var fr={family:'Jost',size:11};
+  Chart.defaults.font.family='Jost'; Chart.defaults.color='#8b7f6d';
+
+  // daily
+  var dr=await sb.rpc('admin_daily_revenue',{p_days:14});
+  if(!dr.error){
+    var labels=dr.data.map(function(x){var p=x.day.split('-');return p[2]+'/'+p[1];});
+    var vals=dr.data.map(function(x){return Number(x.revenue);});
+    drawLine('dailyChart',labels,vals);
+  }
+  // monthly
+  var mr=await sb.rpc('admin_monthly_revenue',{p_months:12});
+  if(!mr.error){
+    var ml=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+    var labels2=mr.data.map(function(x){var d=new Date(x.month);return ml[d.getMonth()];});
+    var vals2=mr.data.map(function(x){return Number(x.revenue);});
+    drawBar('monthlyChart',labels2,vals2);
+  }
+  // top products
+  var tp=await sb.rpc('admin_top_products',{p_limit:6});
+  var tl=$('topList');
+  if(!tp.error && tp.data.length){
+    tl.innerHTML=tp.data.map(function(p,i){
+      return '<li><span class="rank">'+(i+1)+'</span><div class="li-main"><div class="li-name">'+esc(p.name||'—')+
+      '</div><div class="li-meta">'+num(p.qty)+' vendu'+(p.qty>1?'s':'')+'</div></div><span class="li-val">'+eur(p.revenue)+'</span></li>';
+    }).join('');
+  } else { tl.innerHTML='<div class="empty"><span class="serif">Aucune vente pour l’instant</span>Les meilleures ventes apparaîtront ici.</div>'; }
+  // recent orders — lu DIRECTEMENT depuis la table orders (robuste, indépendant de la RPC)
+  var ro=await sb.from('orders').select('order_number,email,status,total,created_at').order('created_at',{ascending:false}).limit(8);
+  var ob=$('ordersBody');
+  if(!ro.error && ro.data.length){
+    ob.innerHTML=ro.data.map(function(o){
+      var dt=new Date(o.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+      return '<tr><td>'+esc(o.order_number)+'</td><td>'+esc(o.email||'—')+'</td><td><span class="badge b-'+o.status+'">'+statusFr(o.status)+
+      '</span></td><td class="num">'+eur(o.total)+'</td><td>'+dt+'</td></tr>';
+    }).join('');
+  } else { ob.innerHTML='<tr><td colspan="5"><div class="empty"><span class="serif">Aucune commande</span>Les commandes récentes s’afficheront ici.</div></td></tr>'; }
+}
+
+function _setTxt(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+async function loadDashExtra(){
+  // Revenus par periode + comparaison periode precedente (RPC existantes, aucune modif DB)
+  try{ var dr=await sb.rpc("admin_daily_revenue",{p_days:60});
+    if(!dr.error && dr.data){ var a=dr.data.map(function(x){return Number(x.revenue)||0;}); var n=a.length;
+      var today=n?a[n-1]:0;
+      var l7=a.slice(-7).reduce(_add,0), p7=a.slice(-14,-7).reduce(_add,0);
+      var l30=a.slice(-30).reduce(_add,0), p30=a.slice(-60,-30).reduce(_add,0);
+      _setTxt("revToday",eur(today)); _setTxt("rev7",eur(l7)); _setTxt("rev30",eur(l30));
+      _delta("d7",l7,p7); _delta("d30",l30,p30); }
+  }catch(e){}
+  try{ var mr=await sb.rpc("admin_monthly_revenue",{p_months:12});
+    if(!mr.error && mr.data){ var yr=mr.data.map(function(x){return Number(x.revenue)||0;}).reduce(_add,0); _setTxt("revYear",eur(yr)); }
+  }catch(e){}
+  // Nouveaux clients -- lecture table customers (deja accessible a l'admin)
+  try{ var nc=await sb.from("customers").select("full_name,email,country,created_at").order("created_at",{ascending:false}).limit(6);
+    var el=document.getElementById("newCustomers");
+    if(el){ if(!nc.error && nc.data && nc.data.length){ el.innerHTML=nc.data.map(function(cu){
+      var dt=new Date(cu.created_at).toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"2-digit"});
+      var nm=esc(cu.full_name||cu.email||"\u2014");
+      return '<li><div class="li-main"><div class="li-name">'+nm+'</div><div class="li-meta">'+esc(cu.email||"")+(cu.country?' \u00b7 '+esc(cu.country):'')+'</div></div><span class="li-val li-date">'+dt+'</span></li>';
+    }).join(""); } else { el.innerHTML='<div class="empty"><span class="serif">Aucun client</span>Les nouveaux clients s\u2019afficheront ici.</div>'; } }
+  }catch(e){}
+  // Top pays -- lecture table orders (deja accessible), agregation cote client
+  try{ var oc=await sb.from("orders").select("shipping_country,total,status");
+    var el2=document.getElementById("topCountries");
+    if(el2){ if(!oc.error && oc.data && oc.data.length){
+      var paid={paid:1,processing:1,shipped:1,delivered:1}; var agg={};
+      oc.data.forEach(function(o){ if(!paid[o.status])return; var k=((o.shipping_country||"")+"").trim()||"\u2014"; if(!agg[k])agg[k]={rev:0,n:0}; agg[k].rev+=Number(o.total)||0; agg[k].n++; });
+      var rows=Object.keys(agg).map(function(k){return {c:k,rev:agg[k].rev,n:agg[k].n};}).sort(function(x,y){return y.rev-x.rev;}).slice(0,6);
+      if(rows.length){ el2.innerHTML=rows.map(function(r,idx){
+        return '<li><span class="rank">'+(idx+1)+'</span><div class="li-main"><div class="li-name">'+esc(r.c)+'</div><div class="li-meta">'+r.n+' commande'+(r.n>1?'s':'')+'</div></div><span class="li-val">'+eur(r.rev)+'</span></li>';
+      }).join(""); } else { el2.innerHTML='<div class="empty"><span class="serif">Aucune vente</span>Les pays s\u2019afficheront ici.</div>'; }
+    } else { el2.innerHTML='<div class="empty"><span class="serif">Aucune vente</span>Les pays s\u2019afficheront ici.</div>'; } }
+  }catch(e){}
+}
+function _add(x,y){return x+y;}
+function _delta(id,cur,prev){
+  var e=document.getElementById(id); if(!e)return;
+  if(!prev||prev<=0){ e.textContent=''; e.className='rc-delta'; return; }
+  var pct=((cur-prev)/prev)*100, up=pct>=0;
+  e.textContent=(up?'\u25b2 +':'\u25bc ')+Math.abs(pct).toFixed(0)+'%';
+  e.className='rc-delta '+(up?'up':'down');
+}
+function statusFr(s){return {pending:'En attente',paid:'Payée',processing:'En cours',shipped:'Expédiée',delivered:'Livrée',cancelled:'Annulée',refunded:'Remboursée'}[s]||s;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+function drawLine(id,labels,data){
+  if(dCharts[id])dCharts[id].destroy();
+  var ctx=$(id).getContext('2d');
+  var g=ctx.createLinearGradient(0,0,0,240); g.addColorStop(0,'rgba(194,163,94,.28)'); g.addColorStop(1,'rgba(194,163,94,0)');
+  dCharts[id]=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{data:data,borderColor:'#a8863f',backgroundColor:g,
+    fill:true,tension:.38,borderWidth:2,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:'#a8863f'}]},
+    options:chartOpts()});
+}
+function drawBar(id,labels,data){
+  if(dCharts[id])dCharts[id].destroy();
+  var ctx=$(id).getContext('2d');
+  dCharts[id]=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{data:data,backgroundColor:'#d7bd83',
+    hoverBackgroundColor:'#a8863f',borderRadius:6,maxBarThickness:30}]},options:chartOpts()});
+}
+function chartOpts(){
+  return {responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'#3c342a',padding:10,displayColors:false,
+      callbacks:{label:function(c){return (c.raw||0).toLocaleString('fr-FR',{minimumFractionDigits:2})+' €';}}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+            y:{beginAtZero:true,grid:{color:'#efe7d6'},ticks:{font:{size:10},
+               callback:function(v){return v>=1000?(v/1000)+'k':v;}}}}};
+}
+
+/* events */
+$('loginBtn').addEventListener('click',doLogin);
+$('password').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+$('logout').addEventListener('click',async function(){ if(sb)await sb.auth.signOut(); location.reload(); });
+
+/* session déjà ouverte ? */
+(async function(){
+  if(!sb){setMsg('Renseignez vos identifiants Supabase en haut de admin.html.','err');return;}
+  var s=(await sb.auth.getSession()).data.session;
+  if(s){ enter(); }
+})();
+</script>
+</body>
+</html>

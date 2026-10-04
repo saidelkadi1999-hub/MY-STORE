@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CÂLINE · Vue d’ensemble du magasin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fbf8f2;--beige:#f2eae0;--paper:#fffdf9;--ink:#3c342a;--taupe:#8b7f6d;
+  --gold:#c2a35e;--gold-deep:#a8863f;--gold-soft:#dcc9a0;--line:#e7dcc9;
+  --green:#2c7a4d;--blue:#3667a0;
+  --serif:'Cormorant Garamond',serif;--sans:'Jost',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);font-weight:300;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{text-decoration:none;color:inherit}
+.serif{font-family:var(--serif)}
+
+/* hero */
+.hero{background:radial-gradient(120% 90% at 50% 0%,#f6efe3,#efe5d4);border-bottom:1px solid var(--line);text-align:center;padding:clamp(38px,7vw,64px) 20px}
+.hero .paw{font-size:26px;margin-bottom:6px}
+.hero .logo{font-family:var(--serif);font-size:clamp(38px,8vw,58px);letter-spacing:.14em;color:var(--gold-deep);line-height:1}
+.hero .eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--taupe);margin:16px 0 8px}
+.hero p{color:var(--taupe);font-size:15px;max-width:480px;margin:0 auto}
+
+.wrap{max-width:1060px;margin:0 auto;padding:clamp(26px,4vw,46px) clamp(16px,4vw,28px) 80px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:46px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 14px;text-align:center;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-deep))}
+.stat .num{font-family:var(--serif);font-size:clamp(26px,4vw,34px);font-weight:600;color:var(--ink);line-height:1}
+.stat .lab{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe);margin-top:7px}
+
+/* section */
+.sec{margin-bottom:44px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.sec-h h2{font-family:var(--serif);font-size:clamp(23px,4vw,29px);font-weight:600}
+.sec-h .tag{margin-left:auto;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);border:1px solid var(--gold-soft);border-radius:20px;padding:4px 12px}
+
+/* cards grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{display:block;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:22px;transition:.25s;position:relative}
+.card:hover{border-color:var(--gold);box-shadow:0 14px 34px rgba(168,134,63,.14);transform:translateY(-2px)}
+.card .ic{width:42px;height:42px;border-radius:11px;background:var(--beige);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.card .ic svg{width:22px;height:22px;stroke:var(--gold-deep);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:5px}
+.card p{font-size:13px;color:var(--taupe);line-height:1.5}
+.card .go{margin-top:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);display:inline-flex;align-items:center;gap:5px}
+.card .file{position:absolute;top:18px;right:18px;font-size:10.5px;color:var(--taupe);font-family:var(--sans);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.card.admin .ic{background:#efe6d3}
+.card.legal{padding:16px 18px}
+.card.legal .ic{width:34px;height:34px;margin-bottom:10px}
+.card.legal h3{font-size:17px}
+
+/* flow */
+.flow{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,30px)}
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;justify-content:center}
+.node{background:var(--cream);border:1px solid var(--line);border-radius:11px;padding:11px 15px;font-size:13px;text-align:center;min-width:96px}
+.node .t{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);display:block;margin-bottom:2px}
+.node.gold{border-color:var(--gold-soft);background:#faf3e4}
+.node.green{border-color:#bfe0cb;background:#eaf3ed}
+.node.blue{border-color:#c5d6ea;background:#eaf0f7}
+.arrow{color:var(--gold-deep);font-size:18px;flex:none}
+.flow-cap{text-align:center;font-size:12.5px;color:var(--taupe);margin-top:16px}
+
+/* backend two-col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:22px}
+.box h3{font-family:var(--serif);font-size:20px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.box h3 .dot{width:9px;height:9px;border-radius:50%;background:var(--green)}
+.box.stripe h3 .dot{background:var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:12px;background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:6px 11px;color:var(--ink)}
+.box ul{list-style:none;margin-top:4px}
+.box li{font-size:13.5px;padding:7px 0;border-bottom:1px solid var(--line);display:flex;gap:8px;color:var(--ink)}
+.box li:last-child{border-bottom:none}
+.box li b{color:var(--gold-deep);font-weight:500}
+
+.foot{text-align:center;color:var(--taupe);font-size:12.5px;border-top:1px solid var(--line);margin-top:40px;padding-top:22px}
+
+@media(max-width:820px){.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.flow-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="paw">🐾</div>
+  <div class="logo">CÂLINE</div>
+  <div class="eyebrow">Vue d’ensemble du magasin</div>
+  <p>Une carte complète de votre boutique : pages, paiement, administration et base de données — tout votre magasin vu de l’intérieur.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="num">8</div><div class="lab">Pages</div></div>
+    <div class="stat"><div class="num">21</div><div class="lab">Produits</div></div>
+    <div class="stat"><div class="num">12</div><div class="lab">Catégories</div></div>
+    <div class="stat"><div class="num">130</div><div class="lab">Images</div></div>
+    <div class="stat"><div class="num">7</div><div class="lab">Vidéos</div></div>
+    <div class="stat"><div class="num">11</div><div class="lab">Tables BDD</div></div>
+    <div class="stat"><div class="num">2</div><div class="lab">Fonctions</div></div>
+    <div class="stat"><div class="num">Stripe</div><div class="lab">Paiement</div></div>
+  </div>
+
+  <!-- BOUTIQUE (CLIENT) -->
+  <div class="sec">
+    <div class="sec-h"><h2>La boutique (côté client)</h2><span class="tag">Visible par vos clients</span></div>
+    <div class="grid">
+      <a href="index.html" class="card">
+        <span class="file">index.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
+        <h3>Boutique</h3>
+        <p>Page principale : produits chien & chat, collections, fiches détaillées, panier.</p>
+        <span class="go">Ouvrir →</span>
+      </a>
+      <a href="checkout.html" class="card">
+        <span class="file">checkout.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg></div>
+        <h3>Paiement</h3>
+        <p>Formulaire client (contact, livraison), récapitulatif, code promo et bouton de paiement.</p>
+        <span class="go">Ouvrir →</span>
+      </a>
+      <a href="merci.html" class="card">
+        <span class="file">merci.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h3>Confirmation</h3>
+        <p>Page « Merci » affichée après un paiement réussi. Vide le panier automatiquement.</p>
+        <span class="go">Ouvrir →</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ADMINISTRATION -->
+  <div class="sec">
+    <div class="sec-h"><h2>L’administration (côté privé)</h2><span class="tag">Réservé à vous</span></div>
+    <div class="grid">
+      <a href="admin.html" class="card admin">
+        <span class="file">admin.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 15l4-4 4 3 8-8"/></svg></div>
+        <h3>Tableau de bord</h3>
+        <p>Chiffre d’affaires, commandes, clients, visiteurs, graphiques et meilleures ventes.</p>
+        <span class="go">Ouvrir →</span>
+      </a>
+      <a href="admin-products.html" class="card admin">
+        <span class="file">admin-products.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h3>Produits</h3>
+        <p>Ajouter, modifier, masquer ou supprimer des produits et catégories, gérer les images.</p>
+        <span class="go">Ouvrir →</span>
+      </a>
+      <a href="admin-orders.html" class="card admin">
+        <span class="file">admin-orders.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div>
+        <h3>Commandes</h3>
+        <p>Liste des commandes, détails client, produits, et changement de statut (payée, expédiée…).</p>
+        <span class="go">Ouvrir →</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- PAGES LÉGALES -->
+  <div class="sec">
+    <div class="sec-h"><h2>Pages légales</h2><span class="tag">À compléter avant le lancement</span></div>
+    <div class="grid">
+      <a href="cgv.html" class="card legal">
+        <span class="file">cgv.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></div>
+        <h3>Conditions de vente</h3>
+        <p>CGV — modèle à personnaliser.</p>
+      </a>
+      <a href="privacy.html" class="card legal">
+        <span class="file">privacy.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div>
+        <h3>Confidentialité</h3>
+        <p>RGPD — modèle à personnaliser.</p>
+      </a>
+      <a href="returns.html" class="card legal">
+        <span class="file">returns.html</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7"/></svg></div>
+        <h3>Retours</h3>
+        <p>Retours & remboursements (14 jours).</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE / FLUX -->
+  <div class="sec">
+    <div class="sec-h"><h2>Le parcours d’un achat</h2><span class="tag">De la visite au paiement</span></div>
+    <div class="flow">
+      <div class="flow-row">
+        <div class="node"><span class="t">Client</span>Boutique</div>
+        <span class="arrow">→</span>
+        <div class="node"><span class="t">Ajoute</span>Panier</div>
+        <span class="arrow">→</span>
+        <div class="node"><span class="t">Remplit</span>Checkout</div>
+        <span class="arrow">→</span>
+        <div class="node gold"><span class="t">Paiement</span>Stripe</div>
+        <span class="arrow">→</span>
+        <div class="node green"><span class="t">Si payé</span>Webhook</div>
+        <span class="arrow">→</span>
+        <div class="node green"><span class="t">Crée</span>Commande</div>
+        <span class="arrow">→</span>
+        <div class="node"><span class="t">Retour</span>Merci</div>
+      </div>
+      <div class="flow-cap">Les prix sont recalculés côté serveur · la commande n’est créée qu’<b>après paiement confirmé</b> · le stock se met à jour automatiquement.</div>
+    </div>
+  </div>
+
+  <!-- BACKEND -->
+  <div class="sec">
+    <div class="sec-h"><h2>Les coulisses (base de données & paiement)</h2><span class="tag">Invisible, mais essentiel</span></div>
+    <div class="two">
+      <div class="box">
+        <h3><span class="dot"></span>Supabase — Base de données</h3>
+        <div class="chips">
+          <span class="chip">products</span><span class="chip">categories</span><span class="chip">orders</span>
+          <span class="chip">order_items</span><span class="chip">customers</span><span class="chip">coupons</span>
+          <span class="chip">reviews</span><span class="chip">settings</span><span class="chip">visits</span>
+          <span class="chip">admins</span><span class="chip">checkout_payloads</span>
+        </div>
+      </div>
+      <div class="box stripe">
+        <h3><span class="dot"></span>Stripe — Paiement & sécurité</h3>
+        <ul>
+          <li><b>Function</b> create-checkout-session — crée la session</li>
+          <li><b>Function</b> stripe-webhook — confirme & enregistre</li>
+          <li><b>Clés secrètes</b> dans Netlify uniquement</li>
+          <li><b>Création commande</b> atomique & sécurisée</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">CÂLINE — Accessoires premium pour chiens & chats · Vue d’ensemble interne du magasin 🐾</div>
+
+</div>
+</body>
+</html>
