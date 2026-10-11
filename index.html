@@ -1565,7 +1565,7 @@ footer::before{content:"";position:absolute;top:-1px;left:0;right:0;height:3px;b
    sans image d'en-tête, titre doré, produits juste en dessous (Chiens / Chats inchangés) ===== */
 .collbanner.best,.collbanner.nouveautes,.collbanner.promo,.collbanner.bienetre{background:transparent;padding:0;overflow:visible}
 .collbanner.best::before,.collbanner.nouveautes::before,.collbanner.promo::before,.collbanner.bienetre::before,.collbanner.best::after,.collbanner.nouveautes::after,.collbanner.promo::after,.collbanner.bienetre::after{content:none;display:none;background:none}
-.collbanner.best>.wrap,.collbanner.nouveautes>.wrap,.collbanner.promo>.wrap,.collbanner.bienetre>.wrap{display:block;min-height:0;padding-top:clamp(28px,4vw,46px);padding-bottom:0}
+.collbanner.best>.wrap,.collbanner.nouveautes>.wrap,.collbanner.promo>.wrap,.collbanner.bienetre>.wrap{display:block;min-height:0;padding-top:clamp(20px,2.4vw,32px);padding-bottom:0}
 .collbanner.best .eyebrow,.collbanner.nouveautes .eyebrow,.collbanner.promo .eyebrow,.collbanner.bienetre .eyebrow{color:#a8863f;text-shadow:none;margin-bottom:8px}
 .collbanner.best h1,.collbanner.nouveautes h1,.collbanner.promo h1,.collbanner.bienetre h1{color:#a8863f;text-shadow:none;letter-spacing:.02em}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
@@ -1576,8 +1576,8 @@ footer::before{content:"";position:absolute;top:-1px;left:0;right:0;height:3px;b
 .collbanner.best+.section .collcount,.collbanner.nouveautes+.section .collcount,.collbanner.promo+.section .collcount,.collbanner.bienetre+.section .collcount{margin-bottom:14px}
 #viewColl.coll-bienetre{background-image:none}
 .collbanner.best .chips:empty,.collbanner.nouveautes .chips:empty,.collbanner.promo .chips:empty,.collbanner.bienetre .chips:empty{display:none}
-.collbanner.best+.section,.collbanner.nouveautes+.section,.collbanner.promo+.section,.collbanner.bienetre+.section{padding-top:clamp(8px,1.2vw,14px)}
-.collbanner.best+.section .collcount,.collbanner.nouveautes+.section .collcount,.collbanner.promo+.section .collcount,.collbanner.bienetre+.section .collcount{margin-bottom:10px}
+.collbanner.best+.section,.collbanner.nouveautes+.section,.collbanner.promo+.section,.collbanner.bienetre+.section{padding-top:2px}
+.collbanner.best+.section .collcount,.collbanner.nouveautes+.section .collcount,.collbanner.promo+.section .collcount,.collbanner.bienetre+.section .collcount{margin:0 0 8px;font-size:11px;line-height:1.3}
 </style>
 </head>
 <body>
@@ -2334,7 +2334,6 @@ footer::before{content:"";position:absolute;top:-1px;left:0;right:0;height:3px;b
         <a href="#" onclick="openColl('best');return false">Meilleures ventes</a>
         <a href="#" onclick="openColl('promo');return false">Promotions</a>
         <a href="#" onclick="openColl('bienetre');return false">Bien-être & soins</a>
-        <a href="blog.html">Le Journal</a>
       </div>
     </div>
     <div class="fsign">Prendre soin de ceux qui ne pourront jamais le demander.</div>
@@ -2713,7 +2712,6 @@ function buildMob(){
   html+='<a class="mlink" href="#" onclick="openColl(\'best\');return false">Meilleures ventes</a>';
   html+='<a class="mlink" href="#" onclick="openColl(\'promo\');return false">Promotions</a>';
   html+='<a class="mlink" href="#" onclick="openColl(\'bienetre\');return false">Bien-être & soins</a>';
-  html+='<a class="mlink" href="blog.html">Le Journal</a>';
   document.getElementById('mobAcc').innerHTML=html;
 }
 buildMob();
@@ -2739,7 +2737,7 @@ updateCart();
         if(!localStorage.getItem('caline_ft')) localStorage.setItem('caline_ft',JSON.stringify(_lt)); // first touch (une seule fois)
       }
     }catch(e){}
-    var sbv=window.__calineSb||(window.__calineSb=window.supabase.createClient(cfg.url,cfg.anonKey));
+    var sbv=window.supabase.createClient(cfg.url,cfg.anonKey);
     var _rec=function(){                                    // enregistre la visite (visiteur normal)
       sessionStorage.setItem('caline_visit','1');
       var _p=location.pathname+(location.search||'');       // inclut les UTM (colonne path existante, pas de changement de schéma)
@@ -2757,7 +2755,7 @@ updateCart();
 (function(){
   var cfg=window.CALINE_SUPABASE||{};
   if(!cfg.url||!cfg.anonKey||!window.supabase){return;}   // non configuré → données intégrées
-  var sb=window.__calineSb||(window.__calineSb=window.supabase.createClient(cfg.url,cfg.anonKey));
+  var sb=window.supabase.createClient(cfg.url,cfg.anonKey);
   function mapRow(r){
     var c=r.categories||{};
     var o={id:r.legacy_id||r.id,n:r.name,sub2:r.subtitle||'',pr:Number(r.price),
@@ -2817,7 +2815,7 @@ updateCart();
     <div class="cb-right"><span class="cb-total">0,00 €</span><span class="cb-cta">Commander →</span></div>
   </div>
 </div>
-<script src="blog-data.js?v=20261002"></script>
+<script src="blog-data.js"></script>
 <script>
 (function(){
   if(!window.CALINE_BLOG)return;
